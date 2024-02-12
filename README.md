@@ -8,8 +8,8 @@ https://www.figma.com/file/UtAK4eRuzFjxgegEuAIlsZ/TrainingBot-State-Diagram
 ### Стек
 - Python 3.12
 - Python-telegram-bot 20.7
-- Django
-- Django Rest Framework
+- Django 5
+- Django Rest Framework 
 - Aiogoogle
 - PostgreSQL
 - Docker
