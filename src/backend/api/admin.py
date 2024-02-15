@@ -13,6 +13,6 @@ class SportsmanAdmin(admin.ModelAdmin):
         "sheet_id",
         "archive_sheet_id",
         "strava_keys",
-        "is_send_morning",
-        "is_send_evening",
+        "morning_reminder_sent",
+        "evening_reminder_sent",
     )

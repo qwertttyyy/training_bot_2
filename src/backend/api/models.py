@@ -2,17 +2,19 @@ from django.db import models
 
 
 class Sportsman(models.Model):
-    chat_id = models.PositiveBigIntegerField(verbose_name="Телеграм ID")
+    chat_id = models.PositiveBigIntegerField(
+        verbose_name="Телеграм ID", unique=True
+    )
     name = models.CharField(max_length=32, verbose_name="Имя")
     surname = models.CharField(max_length=32, verbose_name="Фамилия")
     sheet_id = models.PositiveBigIntegerField(verbose_name="ID листа")
     archive_sheet_id = models.PositiveBigIntegerField(
         verbose_name="ID архивного листа"
     )
-    is_send_morning = models.BooleanField(
+    morning_reminder_sent = models.BooleanField(
         default=False, verbose_name="Отправлено ли утренне уведомление"
     )
-    is_send_evening = models.BooleanField(
+    evening_reminder_sent = models.BooleanField(
         default=False, verbose_name="Отправлено ли вечернее уведомление"
     )
     strava_keys = models.TextField(
