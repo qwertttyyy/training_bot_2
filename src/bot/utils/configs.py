@@ -13,3 +13,7 @@ TOKEN = os.getenv("TOKEN")
 TRAINER_ID = os.getenv("TRAINER_ID")
 
 DATE_FORMAT = "%d.%m.%Y"
+
+INTERNAL_API_URL = os.getenv(
+    "INTERNAL_API_URL", "http://127.0.0.1:8000/api/v1/"
+)

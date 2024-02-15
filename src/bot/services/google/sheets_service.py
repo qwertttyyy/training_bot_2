@@ -17,7 +17,7 @@ from configs import (
 from src.bot.utils.configs import DATE_FORMAT
 
 
-class SheetsService:
+class GoogleSheetsService:
     _SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
     _SPREADSHEET_ID = SPREADSHEET_ID
     _INFO = INFO
@@ -32,7 +32,7 @@ class SheetsService:
             self._aiogoogle = aiogoogle
             self._service = await aiogoogle.discover("sheets", "v4")
 
-    async def _batch_update(self, body):
+    async def _batch_update(self, body: dict):
         response = await self._aiogoogle.as_service_account(
             self._service.spreadsheets.batchUpdate(
                 spreadsheetId=self._SPREADSHEET_ID, json=body
@@ -41,11 +41,11 @@ class SheetsService:
         return response
 
     @staticmethod
-    async def _read_json_file(filepath):
+    async def _read_json_file(filepath: str) -> dict:
         async with aiofiles.open(filepath, mode="r", encoding="utf-8") as f:
             return json.loads(await f.read())
 
-    async def _create_sheet(self, sheet_name):
+    async def _create_sheet(self, sheet_name) -> int:
         requests = [
             {
                 "addSheet": {
@@ -63,7 +63,7 @@ class SheetsService:
         sheet_id = response["replies"][0]["addSheet"]["properties"]["sheetId"]
         return sheet_id
 
-    async def create_sportsman_sheet(self, sheet_name):
+    async def create_sportsman_sheet(self, sheet_name: str) -> int:
         sheet_id = await self._create_sheet(sheet_name)
         styles = await self._read_json_file(self._sheet_style_file)
         data = styles["sheets"][0]["data"][0]["rowData"]
