@@ -27,7 +27,7 @@ class Sportsman(models.Model):
     class Meta:
         verbose_name = "Спортсмен"
         verbose_name_plural = "Спортсмены"
-        ordering = ("created_date",)
+        ordering = ("-created_date",)
 
     def __str__(self):
         return "{name} {surname} {chat_id}".format(

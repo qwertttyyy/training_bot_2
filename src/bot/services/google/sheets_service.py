@@ -69,9 +69,9 @@ class GoogleSheetsService:
         data = styles["sheets"][0]["data"][0]["rowData"]
 
         today = datetime.today().date()
-        for item in data[1:]:
+        async for item in data[1:]:
             item["values"][0]["userEnteredValue"] = {
-                "stringValue": today.strftime(DATE_FORMAT)
+                "stringValue": f"{today:{DATE_FORMAT}}"
             }
             today += timedelta(days=1)
 
