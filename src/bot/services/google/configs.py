@@ -1,6 +1,9 @@
 import os
+from pathlib import Path
 
-from src.bot.utils.configs import BASE_DIR
+from dotenv import load_dotenv
+
+load_dotenv()
 
 INFO = {
     "type": os.getenv("TYPE"),
@@ -15,7 +18,7 @@ INFO = {
     "client_x509_cert_url": os.getenv("CLIENT_X509_CERT_URL"),
 }
 SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
-SHEET_STYLES_DIR = BASE_DIR / "google" / "styles"
+SHEET_STYLES_DIR = Path(__file__).resolve().parent / "styles"
 
 SHEET_COLUMN_COUNT = 15
 SHEET_ROW_COUNT = 1000

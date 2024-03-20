@@ -1,0 +1,7 @@
+START_COMMAND = "start"
+REGISTRATION_COMMAND = "registration"
+FEELING_COMMAND = "feeling"
+REPORT_COMMAND = "report"
+STRAVA_LOGIN = "authstrava"
+SEND_WORKOUT_COMMAND = "sendworkout"
+DELETE_COMMAND = "delete"

@@ -1,5 +1,5 @@
 import enum
 
 
-class States(str, enum.Enum):
+class States(enum.IntEnum):
     (NAME, SURNAME) = range(2)
