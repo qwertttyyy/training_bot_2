@@ -1,10 +1,10 @@
-from rest_framework import exceptions
+from rest_framework import exceptions, generics
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from .models import Sportsman
-from .serializers import SportsmanSerializer
+from .models import Sportsman, Feeling
+from .serializers import SportsmanSerializer, FeelingSerializer
 from .utils import CreateRetrieveListDeleteViewSet
 
 
@@ -27,3 +27,8 @@ class SportsmanViewSet(CreateRetrieveListDeleteViewSet):
         obj.save()
         serializer = self.serializer_class(obj)
         return Response(serializer.data)
+
+
+class FeelingAPIView(generics.CreateAPIView):
+    queryset = Feeling.objects.select_related("sportsman")
+    serializer_class = FeelingSerializer

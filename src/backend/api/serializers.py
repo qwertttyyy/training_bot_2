@@ -1,6 +1,7 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from .models import Sportsman
+from .models import Sportsman, Feeling
 
 
 class SportsmanPartialSerializer(serializers.ModelSerializer):
@@ -31,3 +32,21 @@ class SportsmanSerializer(serializers.ModelSerializer):
             "sheet_id": {"required": True},
             "archive_sheet_id": {"required": True},
         }
+
+
+class FeelingSerializer(serializers.ModelSerializer):
+    chat_id = serializers.SlugRelatedField(
+        slug_field="chat_id",
+        queryset=Sportsman.objects.all(),
+        source="sportsman",
+    )
+    rating = serializers.ChoiceField(Feeling.RATING_CHOICES)
+
+    class Meta:
+        model = Feeling
+        fields = (
+            "rating",
+            "sleep_hours",
+            "heart_rate",
+            "chat_id",
+        )
