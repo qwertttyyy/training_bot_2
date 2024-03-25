@@ -1,12 +1,11 @@
-import asyncio
 import copy
 import json
 from datetime import datetime, timedelta
 
 import aiofiles
 from aiogoogle import Aiogoogle
-from aiogoogle.excs import HTTPError
 from aiogoogle.auth.creds import ServiceAccountCreds
+from aiogoogle.excs import HTTPError
 
 from src.bot.services.google.configs import (
     SPREADSHEET_ID,
@@ -95,15 +94,6 @@ class GoogleSheetsService:
         )
         try:
             await self._batch_update(requests)
-        except HTTPError as e:
-            if "already exists" in e.res.error_msg:
+        except HTTPError as error:
+            if "already exists" in error.res.error_msg:
                 print(f"Лист с именем {sheet_name} уже существует")
-
-
-async def main():
-    async with GoogleSheetsService() as gs:
-        await gs.create_sportsman_sheets("Михаил", 3, 4)
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
