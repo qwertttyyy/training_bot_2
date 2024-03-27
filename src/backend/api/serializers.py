@@ -45,8 +45,8 @@ class FeelingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feeling
         fields = (
+            "chat_id",
             "rating",
             "sleep_hours",
             "heart_rate",
-            "chat_id",
         )

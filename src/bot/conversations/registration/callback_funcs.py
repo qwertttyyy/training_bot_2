@@ -1,5 +1,3 @@
-from re import fullmatch
-
 from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
 
@@ -7,6 +5,7 @@ from src.bot.conversations.registration import templates
 from src.bot.conversations.registration.states import States
 from src.bot.general import templates as base_templates
 from src.bot.general.keyboards import CANCEL_KEYBOARD
+from src.bot.general.validators import validate_input_value
 from src.bot.services.api import api_service
 from src.bot.services.google.sheets_service import GoogleSheetsService
 from src.bot.utils.configs import TRAINER_ID
@@ -18,9 +17,7 @@ async def start_registration(
     chat_id = update.effective_chat.id
 
     if chat_id == TRAINER_ID:
-        await update.message.reply_text(
-            text=base_templates.REPLY_MSG_IF_TRAINER
-        )
+        await update.message.reply_text(text=templates.REPLY_MSG_IF_TRAINER)
         return ConversationHandler.END
 
     sportsmans = await api_service.get_sportsmans_list()
@@ -29,7 +26,7 @@ async def start_registration(
     for sportsman in sportsmans:
         if sportsman.chat_id == chat_id:
             await update.message.reply_text(
-                text=base_templates.REPLY_MSG_ALREADY_REGISTERED
+                text=templates.REPLY_MSG_ALREADY_REGISTERED
             )
             return ConversationHandler.END
         context.user_data[templates.EXISTING_SHEET_IDS_FIELD].append(
@@ -45,8 +42,9 @@ async def start_registration(
 async def handel_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
     name = update.message.text.strip()
 
-    if not fullmatch(templates.NAME_PATTERN, name):
-        await update.message.reply_text(text=templates.NAME_VALIDATION_ERR_MSG)
+    if not await validate_input_value(
+        update, name, templates.NAME_PATTERN, templates.NAME_VALIDATION_ERR_MSG
+    ):
         return States.NAME
 
     context.user_data[templates.NAME_FIELD] = name
@@ -56,15 +54,18 @@ async def handel_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return States.SURNAME
 
 
-async def handel_surname_create_spreadsheet(
+async def handel_surname_save_sportsman(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ):
-    chat_id = update.effective_chat.id
-    name = context.user_data[templates.NAME_FIELD]
     surname = update.message.text.strip()
 
-    if not fullmatch(templates.NAME_PATTERN, surname):
-        await update.message.reply_text(text=templates.NAME_VALIDATION_ERR_MSG)
+    if not await validate_input_value(
+        update,
+        surname,
+        templates.NAME_PATTERN,
+        templates.NAME_VALIDATION_ERR_MSG,
+    ):
+        return States.SURNAME
 
     existing_sheet_ids = context.user_data[templates.EXISTING_SHEET_IDS_FIELD]
     if existing_sheet_ids:
@@ -75,6 +76,9 @@ async def handel_surname_create_spreadsheet(
             templates.EXISTING_SHEET_IDS_FIELD
         ]
 
+    chat_id = update.effective_chat.id
+    name = context.user_data[templates.NAME_FIELD]
+
     async with GoogleSheetsService() as sheet_service:
         await sheet_service.create_sportsman_sheets(
             f"{name} {surname}", sheet_id, archive_sheet_id
@@ -83,3 +87,8 @@ async def handel_surname_create_spreadsheet(
         chat_id, name, surname, sheet_id, archive_sheet_id
     )
     await update.message.reply_text(templates.REPLY_MSG_SUCCESS_REGISTRATION)
+    await context.bot.send_message(
+        TRAINER_ID,
+        templates.NEW_SPORTSMAN_REGISTERED.format(name=name, surname=surname),
+    )
+    return ConversationHandler.END

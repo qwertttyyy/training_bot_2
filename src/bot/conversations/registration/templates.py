@@ -9,7 +9,12 @@ REPLY_MSG_ASK_NAME = (
 )
 REPLY_MSG_ASK_SURNAME = "Введи свою фамилию:"
 REPLY_MSG_SUCCESS_REGISTRATION = "Ты зарегистрирован!"
+REPLY_MSG_IF_TRAINER = "Ты тренер, тебе не нужно регистрироваться!"
+REPLY_MSG_ALREADY_REGISTERED = "Ты уже зарегистрирован!"
 
 NAME_VALIDATION_ERR_MSG = (
     "Некорректный ввод. Может содержать только буквы! Введите ещё раз:"
+)
+NEW_SPORTSMAN_REGISTERED = (
+    "Зарегистрировался новый спортсмен: {name} {surname}"
 )

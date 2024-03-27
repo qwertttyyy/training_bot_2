@@ -1,5 +1,7 @@
+import asyncio
 import copy
 import json
+import locale
 from datetime import datetime, timedelta
 
 import aiofiles
@@ -16,7 +18,8 @@ from src.bot.services.google.templates import (
     ADD_SHEET_REQUEST,
     UPDATE_CELLS_REQUEST,
 )
-from src.bot.utils.configs import DATE_FORMAT
+from src.bot.utils.configs import SHEET_DATE_FORMAT
+from src.bot.utils.utils import get_formatted_today_date
 
 
 class GoogleSheetsService:
@@ -44,6 +47,25 @@ class GoogleSheetsService:
             )
         )
         return response
+
+    async def _read_values(self, sheet_range: str) -> list:
+        response = await self._aiogoogle.as_service_account(
+            self._service.spreadsheets.values.get(
+                spreadsheetId=self._SPREADSHEET_ID, range=sheet_range
+            )
+        )
+        return response.get("values")
+
+    async def _write_values(self, sheet_range: str, values: list) -> None:
+        body = {"majorDimension": "ROWS", "values": [values]}
+        await self._aiogoogle.as_service_account(
+            self._service.spreadsheets.values.update(
+                spreadsheetId=self._SPREADSHEET_ID,
+                range=sheet_range,
+                valueInputOption="USER_ENTERED",
+                json=body,
+            )
+        )
 
     @staticmethod
     async def _read_json_file(filepath: str) -> dict:
@@ -79,10 +101,11 @@ class GoogleSheetsService:
         styles = await self._read_json_file(self._sheet_style_file)
         data = styles["sheets"][0]["data"][0]["rowData"]
 
-        today = datetime.today().date()
+        today = datetime.today()
+        locale.setlocale(locale.LC_ALL, "")
         for item in data[1:]:
             item["values"][0]["userEnteredValue"] = {
-                "stringValue": f"{today:{DATE_FORMAT}}"
+                "stringValue": get_formatted_today_date(SHEET_DATE_FORMAT)
             }
             today += timedelta(days=1)
 
@@ -97,3 +120,30 @@ class GoogleSheetsService:
         except HTTPError as error:
             if "already exists" in error.res.error_msg:
                 print(f"Лист с именем {sheet_name} уже существует")
+            else:
+                raise error
+
+    async def send_data_to_sheet(
+        self, full_name: str, column: str, values: list
+    ):
+        sheet_dates = await self._read_values(full_name + "!A2:A")
+        sheet_dates = [date[0] if date else date for date in sheet_dates]
+        locale.setlocale(locale.LC_ALL, "")
+        row_index = sheet_dates.index(
+            get_formatted_today_date(SHEET_DATE_FORMAT)
+        )
+        await self._write_values(
+            f"{full_name}!{column}{row_index + 2}", values
+        )
+
+
+async def main():
+    async with GoogleSheetsService() as service:
+        await service.send_data_to_sheet("Михаил Морозов", "B", [7, 8, 60])
+        # a = await service._read_values("Михаил Морозов!A2:A")
+        # await service._write_values("Михаил Морозов!B2:D2", [1, 2, 3])
+        print(1)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

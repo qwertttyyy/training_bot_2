@@ -10,8 +10,9 @@ DATA_DIR = BASE_DIR.parent / ".data"
 
 API_TOKEN = os.getenv("API_TOKEN")
 
-TRAINER_ID = os.getenv("TRAINER_ID")
+TRAINER_ID = int(os.getenv("TRAINER_ID"))
 
+SHEET_DATE_FORMAT = "%a, %d.%m.%Y"
 DATE_FORMAT = "%d.%m.%Y"
 
 INTERNAL_API_URL = os.getenv(

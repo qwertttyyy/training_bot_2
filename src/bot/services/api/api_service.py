@@ -29,3 +29,13 @@ class APIService(BaseAPIService):
         }
         endpoint_urn = f"sportsmans/"
         await self._post_request(endpoint_urn, sportsman_data)
+
+    async def save_feeling(self, chat_id, rating, sleep_hours, heart_rate):
+        endpoint_urn = "feelings/"
+        feeling_data = {
+            "chat_id": chat_id,
+            "rating": rating,
+            "sleep_hours": sleep_hours,
+            "heart_rate": heart_rate,
+        }
+        await self._post_request(endpoint_urn, feeling_data)

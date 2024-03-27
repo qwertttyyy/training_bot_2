@@ -30,7 +30,7 @@ registration_handler: ConversationHandler = ConversationHandler(
             CallbackQueryHandler(cancel_conversation, BTN_CANCEL),
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
-                callback_funcs.handel_surname_create_spreadsheet,
+                callback_funcs.handel_surname_save_sportsman,
             ),
         ],
     },
