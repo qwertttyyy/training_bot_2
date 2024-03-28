@@ -72,3 +72,23 @@ class MorningReport(models.Model):
             surname=self.sportsman.surname,
             chat_id=self.sportsman.chat_id,
         )
+
+
+class Training(models.Model):
+    strava_id = models.PositiveBigIntegerField(
+        null=True, blank=True, verbose_name="ID Strava"
+    )
+    distance = models.FloatField(verbose_name="Дистанция")
+    avg_temp = models.CharField(max_length=3, verbose_name="Средний темп")
+    avg_heart_rate = models.PositiveSmallIntegerField(
+        verbose_name="Средний пульс"
+    )
+    date = models.DateTimeField(
+        auto_now_add=True, verbose_name="Дата тренировки"
+    )
+    sportsman = models.ForeignKey(
+        Sportsman,
+        on_delete=models.CASCADE,
+        related_name="trainings",
+        verbose_name="Спортсмен",
+    )
