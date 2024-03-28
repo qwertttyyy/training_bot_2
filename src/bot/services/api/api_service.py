@@ -30,12 +30,14 @@ class APIService(BaseAPIService):
         endpoint_urn = f"sportsmans/"
         await self._post_request(endpoint_urn, sportsman_data)
 
-    async def save_feeling(self, chat_id, rating, sleep_hours, heart_rate):
-        endpoint_urn = "feelings/"
-        feeling_data = {
+    async def save_morning_report(
+        self, chat_id, health_score, sleep_hours, heart_rate
+    ):
+        endpoint_urn = "morning_reports/"
+        morning_report_data = {
             "chat_id": chat_id,
-            "rating": rating,
+            "health_score": health_score,
             "sleep_hours": sleep_hours,
             "heart_rate": heart_rate,
         }
-        await self._post_request(endpoint_urn, feeling_data)
+        await self._post_request(endpoint_urn, morning_report_data)

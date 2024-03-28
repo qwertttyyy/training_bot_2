@@ -14,6 +14,7 @@ def convert_to_number(string_number: str) -> int | float:
         return float(string_number)
 
 
-def get_formatted_today_date(format: str) -> str:
-    today_date = datetime.today()
-    return f"{today_date:{format}}".lower()
+def get_formatted_date(format: str, date=None) -> str:
+    if not date:
+        date = datetime.today()
+    return f"{date:{format}}".lower()

@@ -1,15 +1,14 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from .models import Sportsman, Feeling
+from .models import Sportsman, MorningReport
 
 
 class SportsmanPartialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sportsman
         fields = (
-            "morning_reminder_sent",
-            "evening_reminder_sent",
+            "morning_report_sent",
+            "training_report_sent",
         )
 
 
@@ -22,8 +21,8 @@ class SportsmanSerializer(serializers.ModelSerializer):
             "chat_id",
             "sheet_id",
             "archive_sheet_id",
-            "morning_reminder_sent",
-            "evening_reminder_sent",
+            "morning_report_sent",
+            "training_report_sent",
         )
         extra_kwargs = {
             "name": {"required": True},
@@ -34,19 +33,19 @@ class SportsmanSerializer(serializers.ModelSerializer):
         }
 
 
-class FeelingSerializer(serializers.ModelSerializer):
+class MorningReportSerializer(serializers.ModelSerializer):
     chat_id = serializers.SlugRelatedField(
         slug_field="chat_id",
         queryset=Sportsman.objects.all(),
         source="sportsman",
     )
-    rating = serializers.ChoiceField(Feeling.RATING_CHOICES)
+    health_score = serializers.ChoiceField(MorningReport.HEALTH_SCORE_CHOICES)
 
     class Meta:
-        model = Feeling
+        model = MorningReport
         fields = (
             "chat_id",
-            "rating",
+            "health_score",
             "sleep_hours",
             "heart_rate",
         )

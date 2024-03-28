@@ -10,15 +10,15 @@ class Sportsman:
     chat_id: int
     sheet_id: int
     archive_sheet_id: int
-    morning_reminder_sent: bool
-    evening_reminder_sent: bool
+    morning_report_sent: bool
+    training_report_sent: bool
 
     def __post_init__(self):
         self.full_name = f"{self.name} {self.surname}"
 
 
 @dataclass
-class Feeling:
-    rating: Optional[int] = field(default=None)
+class MorningReport:
+    health_score: Optional[int] = field(default=None)
     sleep_hours: Optional[float] = field(default=None)
     heart_rate: Optional[int] = field(default=None)

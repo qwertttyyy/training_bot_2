@@ -1,6 +1,6 @@
 START_COMMAND = "start"
 REGISTRATION_COMMAND = "registration"
-FEELING_COMMAND = "feeling"
+MORNING_REPORT_COMMAND = "morning_report"
 REPORT_COMMAND = "report"
 STRAVA_LOGIN = "authstrava"
 SEND_WORKOUT_COMMAND = "sendworkout"

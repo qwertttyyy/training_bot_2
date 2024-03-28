@@ -19,7 +19,7 @@ from src.bot.services.google.templates import (
     UPDATE_CELLS_REQUEST,
 )
 from src.bot.utils.configs import SHEET_DATE_FORMAT
-from src.bot.utils.utils import get_formatted_today_date
+from src.bot.utils.utils import get_formatted_date
 
 
 class GoogleSheetsService:
@@ -101,13 +101,13 @@ class GoogleSheetsService:
         styles = await self._read_json_file(self._sheet_style_file)
         data = styles["sheets"][0]["data"][0]["rowData"]
 
-        today = datetime.today()
+        date = datetime.today()
         locale.setlocale(locale.LC_ALL, "")
         for item in data[1:]:
             item["values"][0]["userEnteredValue"] = {
-                "stringValue": get_formatted_today_date(SHEET_DATE_FORMAT)
+                "stringValue": get_formatted_date(SHEET_DATE_FORMAT, date)
             }
-            today += timedelta(days=1)
+            date += timedelta(days=1)
 
         await self._add_update_sheet_request(sheet_id, data, requests)
 
@@ -129,9 +129,7 @@ class GoogleSheetsService:
         sheet_dates = await self._read_values(full_name + "!A2:A")
         sheet_dates = [date[0] if date else date for date in sheet_dates]
         locale.setlocale(locale.LC_ALL, "")
-        row_index = sheet_dates.index(
-            get_formatted_today_date(SHEET_DATE_FORMAT)
-        )
+        row_index = sheet_dates.index(get_formatted_date(SHEET_DATE_FORMAT))
         await self._write_values(
             f"{full_name}!{column}{row_index + 2}", values
         )
@@ -139,9 +137,10 @@ class GoogleSheetsService:
 
 async def main():
     async with GoogleSheetsService() as service:
-        await service.send_data_to_sheet("Михаил Морозов", "B", [7, 8, 60])
+        # await service.send_data_to_sheet("Михаил Морозов", "B", [7, 8, 60])
         # a = await service._read_values("Михаил Морозов!A2:A")
         # await service._write_values("Михаил Морозов!B2:D2", [1, 2, 3])
+        await service.create_sportsman_sheets("Михаил", 12, 13)
         print(1)
 
 

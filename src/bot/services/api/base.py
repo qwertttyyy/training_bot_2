@@ -2,8 +2,6 @@ from urllib.parse import urljoin
 
 from httpx import AsyncClient, Response
 
-from src.bot.utils.configs import INTERNAL_API_URL
-
 
 class BaseAPIService:
     def __init__(self, base_url):
@@ -19,7 +17,6 @@ class BaseAPIService:
             response = await client.post(
                 urljoin(self.base_url, endpoint_urn), data=data
             )
-            response.raise_for_status()
         return response
 
     async def _patch_request(self, endpoint_urn: str, data: dict) -> Response:
@@ -27,7 +24,6 @@ class BaseAPIService:
             response = await client.patch(
                 urljoin(self.base_url, endpoint_urn), data=data
             )
-            response.raise_for_status()
         return response
 
     async def _delete_request(self, endpoint_urn: str) -> Response:
@@ -35,5 +31,4 @@ class BaseAPIService:
             response = await client.delete(
                 urljoin(self.base_url, endpoint_urn)
             )
-            response.raise_for_status()
         return response

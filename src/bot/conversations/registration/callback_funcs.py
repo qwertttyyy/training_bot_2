@@ -3,7 +3,6 @@ from telegram.ext import ContextTypes, ConversationHandler
 
 from src.bot.conversations.registration import templates
 from src.bot.conversations.registration.states import States
-from src.bot.general import templates as base_templates
 from src.bot.general.keyboards import CANCEL_KEYBOARD
 from src.bot.general.validators import validate_input_value
 from src.bot.services.api import api_service

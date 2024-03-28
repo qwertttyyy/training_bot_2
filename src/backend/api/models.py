@@ -11,11 +11,11 @@ class Sportsman(models.Model):
     archive_sheet_id = models.PositiveBigIntegerField(
         verbose_name="ID архивного листа"
     )
-    morning_reminder_sent = models.BooleanField(
-        default=False, verbose_name="Отправлено ли утренне уведомление"
+    morning_report_sent = models.BooleanField(
+        default=False, verbose_name="Отправлен ли утренний отчёт"
     )
-    evening_reminder_sent = models.BooleanField(
-        default=False, verbose_name="Отправлено ли вечернее уведомление"
+    training_report_sent = models.BooleanField(
+        default=False, verbose_name="Отправлен ли отчёт после тренировки"
     )
     strava_keys = models.TextField(
         null=True, blank=True, verbose_name="Ключи API Strava"
@@ -35,8 +35,8 @@ class Sportsman(models.Model):
         )
 
 
-class Feeling(models.Model):
-    RATING_CHOICES = (
+class MorningReport(models.Model):
+    HEALTH_SCORE_CHOICES = (
         (1, 1),
         (2, 2),
         (3, 3),
@@ -49,8 +49,8 @@ class Feeling(models.Model):
         (10, 10),
     )
 
-    rating = models.SmallIntegerField(
-        choices=RATING_CHOICES, verbose_name="Оценка самочувствия"
+    health_score = models.SmallIntegerField(
+        choices=HEALTH_SCORE_CHOICES, verbose_name="Оценка самочувствия"
     )
     sleep_hours = models.FloatField(verbose_name="Кол-во часов сна")
     heart_rate = models.PositiveSmallIntegerField(verbose_name="Пульс")
@@ -58,12 +58,12 @@ class Feeling(models.Model):
         verbose_name="Дата создания", auto_now_add=True
     )
     sportsman = models.ForeignKey(
-        Sportsman, on_delete=models.CASCADE, related_name="feelings"
+        Sportsman, on_delete=models.CASCADE, related_name="morning_reports"
     )
 
     class Meta:
-        verbose_name = "Самочувствие"
-        verbose_name_plural = "Самочувствие"
+        verbose_name = "Утренний отчёт"
+        verbose_name_plural = "Утренние отчёты"
         ordering = ("-created_date",)
 
     def __str__(self):
