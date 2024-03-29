@@ -78,3 +78,15 @@ class TrainingSerializer(serializers.ModelSerializer):
                 sportsman=training.sportsman, report=report
             )
         return training
+
+
+class TrainingReportSerializer(serializers.ModelSerializer):
+    chat_id = serializers.SlugRelatedField(
+        slug_field="chat_id",
+        queryset=Sportsman.objects.all(),
+        source="sportsman",
+    )
+
+    class Meta:
+        model = TrainingReport
+        fields = ("chat_id", "report")
