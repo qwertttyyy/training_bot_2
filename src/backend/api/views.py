@@ -1,7 +1,11 @@
 from rest_framework import generics
 
-from .models import Sportsman, MorningReport
-from .serializers import SportsmanSerializer, MorningReportSerializer
+from .models import Sportsman, MorningReport, Training
+from .serializers import (
+    SportsmanSerializer,
+    MorningReportSerializer,
+    TrainingSerializer,
+)
 from .utils import CreateRetrieveListDeleteViewSet
 
 
@@ -14,3 +18,8 @@ class SportsmanViewSet(CreateRetrieveListDeleteViewSet):
 class MorningReportAPIView(generics.CreateAPIView):
     queryset = MorningReport.objects.select_related("sportsman")
     serializer_class = MorningReportSerializer
+
+
+class TrainingAPIView(generics.CreateAPIView):
+    queryset = Training.objects.select_related("sportsman")
+    serializer_class = TrainingSerializer

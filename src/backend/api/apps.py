@@ -1,5 +1,4 @@
 from django.apps import AppConfig
-from django.db.models.signals import post_save
 
 
 class ApiConfig(AppConfig):
@@ -7,7 +6,4 @@ class ApiConfig(AppConfig):
     name = "api"
 
     def ready(self, *args, **kwargs):
-        from . import signals
-
-        morning_report_model = self.get_model("MorningReport")
-        post_save.connect(signals.set_report_sent, sender=morning_report_model)
+        from . import signals  # noqa

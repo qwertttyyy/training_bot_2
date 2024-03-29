@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Sportsman, MorningReport
+from .models import Sportsman, MorningReport, Training, TrainingReport
 
 
 class SportsmanPartialSerializer(serializers.ModelSerializer):
@@ -49,3 +49,32 @@ class MorningReportSerializer(serializers.ModelSerializer):
             "sleep_hours",
             "heart_rate",
         )
+
+
+class TrainingSerializer(serializers.ModelSerializer):
+    chat_id = serializers.SlugRelatedField(
+        slug_field="chat_id",
+        queryset=Sportsman.objects.all(),
+        source="sportsman",
+    )
+    report = serializers.CharField(required=False, write_only=True)
+
+    class Meta:
+        model = Training
+        fields = (
+            "chat_id",
+            "distance",
+            "avg_temp",
+            "avg_heart_rate",
+            "date",
+            "report",
+        )
+
+    def create(self, validated_data):
+        report = validated_data.pop("report", None)
+        training = Training.objects.create(**validated_data)
+        if report is not None:
+            TrainingReport.objects.create(
+                sportsman=training.sportsman, report=report
+            )
+        return training

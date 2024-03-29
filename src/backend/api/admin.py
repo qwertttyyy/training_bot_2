@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Sportsman, MorningReport, Training
+from .models import Sportsman, MorningReport, Training, TrainingReport
 
 
 @admin.register(Sportsman)
@@ -19,6 +19,18 @@ class SportsmanAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(MorningReport)
+class MorningReportAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "health_score",
+        "sleep_hours",
+        "heart_rate",
+        "created_date",
+        "sportsman",
+    )
+
+
 @admin.register(Training)
 class TrainingAdmin(admin.ModelAdmin):
     list_display = (
@@ -32,13 +44,10 @@ class TrainingAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(MorningReport)
-class MorningReportAdmin(admin.ModelAdmin):
+@admin.register(TrainingReport)
+class TrainingReportAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "health_score",
-        "sleep_hours",
-        "heart_rate",
+        "report",
         "created_date",
-        "sportsman",
     )

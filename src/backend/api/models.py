@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 
@@ -79,11 +81,13 @@ class Training(models.Model):
         null=True, blank=True, verbose_name="ID Strava"
     )
     distance = models.FloatField(verbose_name="Дистанция")
-    avg_temp = models.CharField(max_length=3, verbose_name="Средний темп")
+    avg_temp = models.CharField(max_length=4, verbose_name="Средний темп")
     avg_heart_rate = models.PositiveSmallIntegerField(
         verbose_name="Средний пульс"
     )
-    date = models.DateTimeField(verbose_name="Дата тренировки")
+    date = models.DateTimeField(
+        verbose_name="Дата тренировки", default=datetime.now
+    )
     sportsman = models.ForeignKey(
         Sportsman,
         on_delete=models.CASCADE,
@@ -104,7 +108,7 @@ class Training(models.Model):
         )
 
 
-class Report(models.Model):
+class TrainingReport(models.Model):
     report = models.TextField(verbose_name="Отчёт после тренировки")
     created_date = models.DateTimeField(
         verbose_name="Дата создания", auto_now_add=True
