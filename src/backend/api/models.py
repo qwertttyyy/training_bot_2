@@ -83,12 +83,47 @@ class Training(models.Model):
     avg_heart_rate = models.PositiveSmallIntegerField(
         verbose_name="Средний пульс"
     )
-    date = models.DateTimeField(
-        auto_now_add=True, verbose_name="Дата тренировки"
-    )
+    date = models.DateTimeField(verbose_name="Дата тренировки")
     sportsman = models.ForeignKey(
         Sportsman,
         on_delete=models.CASCADE,
         related_name="trainings",
         verbose_name="Спортсмен",
     )
+
+    class Meta:
+        verbose_name = "Тренировка"
+        verbose_name_plural = "Тренировки"
+        ordering = ("-date",)
+
+    def __str__(self):
+        return "{name} {surname} {chat_id}".format(
+            name=self.sportsman.name,
+            surname=self.sportsman.surname,
+            chat_id=self.sportsman.chat_id,
+        )
+
+
+class Report(models.Model):
+    report = models.TextField(verbose_name="Отчёт после тренировки")
+    created_date = models.DateTimeField(
+        verbose_name="Дата создания", auto_now_add=True
+    )
+    sportsman = models.ForeignKey(
+        Sportsman,
+        on_delete=models.CASCADE,
+        related_name="reports",
+        verbose_name="Спортсмен",
+    )
+
+    class Meta:
+        verbose_name = "Отчёт после тренировки"
+        verbose_name_plural = "Отчёты после тренировки"
+        ordering = ("-created_date",)
+
+    def __str__(self):
+        return "{name} {surname} {chat_id}".format(
+            name=self.sportsman.name,
+            surname=self.sportsman.surname,
+            chat_id=self.sportsman.chat_id,
+        )
